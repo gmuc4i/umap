@@ -23,7 +23,7 @@ var KmlFeature = (function () {
      */
     Feature.prototype.load = function (feature_str, visible) {
         var that = this;
-        $.post('https://horwitzja.com/parser/', {
+        $.post('https://styx.c4i.gmu.edu/kml_proxy/', {
             uid: that.overlayId,
             kml_data: feature_str
         }, function (data) {
@@ -31,7 +31,7 @@ var KmlFeature = (function () {
                 console.log(data.error);
                 return;
             }
-            that.loadUrl('https://horwitzja.com/parser/'+data.url, visible);
+            that.loadUrl('https://styx.c4i.gmu.edu/kml_proxy/'+data.url, visible);
         });
     }
 
