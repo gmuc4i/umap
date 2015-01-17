@@ -52,7 +52,7 @@ $(document).ready(function () {
             featureId: 'feature_id_3',
             name: 'Foobar',
             format: 'KML',
-            url: 'http://oscmapi.verajosh.com/kml/states2.kml',
+            url: 'https://styx.c4i.gmu.edu/kml/evac_routes.kml',
         };
         umap.Eventing.publish('map.feature.plot.url', obj);
 
