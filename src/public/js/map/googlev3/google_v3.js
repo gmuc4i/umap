@@ -57,7 +57,10 @@ var GoogleMap = (function () {
     		requestStatus: requestStatus,
     		respondWithMapFormatStatus: respondWithMapFormatStatus,
     		respondWithMapAboutStatus: respondWithMapFormatStatus,
-    		respondWithMapSelectedStatus: respondWithMapSelectedStatus
+    		respondWithMapSelectedStatus: respondWithMapSelectedStatus,
+
+            // Expose the Google map instance itself
+            map: map
     	};
 
 	}

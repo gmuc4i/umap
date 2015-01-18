@@ -9,6 +9,9 @@
       src="js/vendor/jquery.js">
     </script>
     <script type="text/javascript"
+            src="js/vendor/annyang.min.js">
+    </script>
+    <script type="text/javascript"
       src="js/vendor/lodash.compat.min.js">
     </script>
     <script type="text/javascript"
@@ -77,23 +80,63 @@
           </div>
         </div>
       </div>
-  </divf>
+  </div>
     <div id="map-canvas" class="map-canvas"></div>
     <script>
       $(document).ready(function(){
         // Create a proxy window to send to and receive
         // messages from the iFrame
         //new uMap('googlev3', 'map-canvas');
+        var map;
+
         umap.Eventing.init('/proxy.html');
         if (_(window.loadRelay).isFunction()) {
           $(window).bind('socketConnected', function () {
-            new uMap('googlev3', 'map-canvas');
+            map = new uMap('googlev3', 'map-canvas');
           });
         } else {
           $(window).bind('eventingReady', function () {
-            new uMap('googlev3', 'map-canvas');
+            map = new uMap('googlev3', 'map-canvas');
           });
         }
+        var geocoder = new google.maps.Geocoder();
+
+        function markLocation(address) {
+          changeMap(address, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+              map.map.setCenter(results[0].geometry.location);
+              var marker = new google.maps.Marker({
+                map: map.map,
+                position: results[0].geometry.location
+              });
+            } else {
+              alert("Geocode was not successful for the following reason: " + status);
+            }
+          });
+        }
+
+        function moveToLocation(address) {
+          changeMap(address, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+              map.map.setCenter(results[0].geometry.location);
+            }
+          });
+        }
+
+        function changeMap(address, callback) {
+          geocoder.geocode({'address': address}, callback)
+        }
+
+        var commands = {
+          'mark *location': markLocation,
+          'move to *location': moveToLocation
+        };
+
+        annyang.addCommands(commands);
+
+        annyang.start();
+        console.log("annyang started");
+
       });
     </script>
   </body>
