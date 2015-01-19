@@ -7,27 +7,15 @@
     <link rel="stylesheet" href="css/style.css">
   </head>
   <body>
+  <dialog id="myDialog">This is a dialog window</dialog>
     <div class="container">
       <div class="header">
         <h1>OSCMAPI</h1>
         <p class="lead"></p>
       </div>
       <div class="row">
-        <div class="col-sm-3">
-          <iframe src="test" id="frame-1" name="frame-1" class="sidebar_container"></iframe>
-        </div>
-        <div class="col-sm-9">
-          <iframe src="map" id="frame-2" name="frame-2" class="map_container"></iframe>
-        </div>
-      </div>
-      <div class="row">
         <div class="col-sm-12">
-          <iframe src="loader" id="frame-loader" name="frame-loader" class="logging_container"></iframe>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-9">
-          <iframe src="logging" id="frame-3" name="frame-3" class="logging_container"></iframe>
+          <iframe src="map" id="main-frame" name="main-frame" class="map_container"></iframe>
         </div>
       </div>
     </div>
@@ -54,7 +42,7 @@
           // messages from the iFrame
           window.addWindowProxy(
               '/proxy.html',
-              'frame-1'
+              'main-frame'
           );
 
           window.addWindowProxy(
@@ -71,5 +59,16 @@
           );
 
       });
+
+      function dialogBox(message) {
+          console.log(message);
+          var dialogBox = document.getElementById('myDialog');
+          dialogBox.textContent = message;
+          dialogBox.show();
+          setTimeout(function () {
+              document.getElementById('myDialog').close();
+          }, 1000);
+      }
+
     </script>
 </html>

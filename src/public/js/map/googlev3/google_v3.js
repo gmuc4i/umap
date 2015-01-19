@@ -57,7 +57,10 @@ var GoogleMap = (function () {
     		requestStatus: requestStatus,
     		respondWithMapFormatStatus: respondWithMapFormatStatus,
     		respondWithMapAboutStatus: respondWithMapFormatStatus,
-    		respondWithMapSelectedStatus: respondWithMapSelectedStatus
+    		respondWithMapSelectedStatus: respondWithMapSelectedStatus,
+
+            // Expose the Google map instance itself
+            map: map
     	};
 
 	}
@@ -488,7 +491,7 @@ var GoogleMap = (function () {
             console.log('auto'); //TODO: What to do with auto?
         } else if (_(payload).has('zoom')) {
             var range = _(payload.zoom).isString() ? parseFloat(payload.zoom) : payload.zoom;
-            zoom = getZoom(range);
+            var zoom = getZoom(range);
             map.setZoom(zoom);
         }
         setupDragListener();
