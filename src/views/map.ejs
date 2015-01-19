@@ -83,7 +83,7 @@
   </div>
     <div id="map-canvas" class="map-canvas"></div>
     <script>
-      $(document).ready(function(){
+      $(document).ready(function () {
         // Create a proxy window to send to and receive
         // messages from the iFrame
         //new uMap('googlev3', 'map-canvas');
@@ -103,28 +103,26 @@
 
         function markLocation(address) {
           changeMap(address, function (results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-              map.map.setCenter(results[0].geometry.location);
-              var marker = new google.maps.Marker({
-                map: map.map,
-                position: results[0].geometry.location
-              });
-            } else {
-              alert("Geocode was not successful for the following reason: " + status);
-            }
+            map.map.setCenter(results[0].geometry.location);
+            var marker = new google.maps.Marker({
+              map: map.map,
+              position: results[0].geometry.location
+            });
           });
         }
 
         function moveToLocation(address) {
-          changeMap(address, function (results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-              map.map.setCenter(results[0].geometry.location);
-            }
+          changeMap(address, function (results) {
+            map.map.setCenter(results[0].geometry.location);
           });
         }
 
         function changeMap(address, callback) {
-          geocoder.geocode({'address': address}, callback)
+          geocoder.geocode({'address': address}, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+              callback(results);
+            }
+          });
         }
 
         var commands = {
