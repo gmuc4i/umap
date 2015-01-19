@@ -99,8 +99,41 @@
             map = new uMap('googlev3', 'map-canvas');
           });
         }
+
         var markers = {};
         var geocoder = new google.maps.Geocoder();
+
+        umap.Eventing.subscribe('marker.post', function (srcName) {
+          console.log('received message ' + srcName);
+          if (srcName == 'CIA') {
+            showDataCIA(true);
+          }
+          else if (srcName == 'FBI') {
+            showDataFBI(true);
+          }
+          else {  // AIRFORCE
+            showDataAIRFORCE(true);
+          }
+          // var myLatLng = new google.maps.LatLng(markerArgs['lat'], markerArgs['lon']);
+          // var image = {
+          //   url: markerArgs['imgUrl'],
+          //   // This marker is 20 pixels wide by 32 pixels tall.
+          //   size: new google.maps.Size(32, 32),
+          //   // The origin for this image is 0,0.
+          //   origin: new google.maps.Point(0,0),
+          //   // The anchor for this image is the base of the flagpole at 0,32.
+          //   anchor: new google.maps.Point(0, 32)
+          // };
+          // delete markerArgs['lat'];
+          // delete markerArgs['lon'];
+          // delete markerArgs['imgUrl'];
+          // markerArgs['icon'] = image;
+          // markerArgs['position'] = myLatLng;
+          // markerArgs['map'] = window.map;
+
+          // var marker = new google.maps.Marker(markerArgs);
+          // markers[markerArgs['title']] = marker;
+        });
 
         function markLocation(address) {
           window.parent.dialogBox('mark ' + address);
@@ -240,10 +273,11 @@
           '*term': otherCommands
         };
 
-        annyang.addCommands(commands);
-
-        annyang.start();
-        console.log("annyang started");
+        if(annyang){
+          annyang.addCommands(commands);
+          annyang.start();
+          console.log("annyang started");
+        }
 
         // FBI
         var FBI_DATA = [
@@ -317,21 +351,30 @@
             }
           }
 
-          function showDataCIA () {
-            window.parent.dialogBox('showDataCIA');
+          function showDataCIA (flag) {
+            //window.parent.dialogBox('showDataCIA');
             setMarkers(map.map, CIA_DATA, 'images/target-icon.png');
+            if (!flag) {
+              umap.Eventing.publish('marker.post', 'CIA');
+            }
           }
 
-          function showDataFBI (spoken) {
-            window.parent.dialogBox('showDataFBI');
+          function showDataFBI (flag) {
+            //window.parent.dialogBox('showDataFBI');
             setMarkers(map.map, FBI_DATA);
             map.map.setZoom(map.map.getZoom() + 7);
+            if (!flag) {
+              umap.Eventing.publish('marker.post', 'FBI');
+            }
           }
 
-          function showDataAIRFORCE (spoken) {
-            window.parent.dialogBox('showDataAIRFORCE');
+          function showDataAIRFORCE (flag) {
+            //window.parent.dialogBox('showDataAIRFORCE');
             setMarkers(map.map, AIRFORCE_DATA, 'images/target-icon.png');
             map.map.setZoom(map.map.getZoom() - 3);
+            if (!flag) {
+              umap.Eventing.publish('marker.post', 'AIRFORCE');
+            }
           }
 
       });
