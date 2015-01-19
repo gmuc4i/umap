@@ -132,6 +132,15 @@
           }
         }
 
+        function removeAllMarkers(){
+          window.parent.dialogBox('remove all markers');
+          for(var key in markers){
+            if(markers.hasOwnProperty(key)){
+              removeMarker(key);
+            }
+          }
+        }
+
         function changeMap(address, callback) {
           geocoder.geocode({'address': address}, function (results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
@@ -145,9 +154,10 @@
         }
 
         var commands = {
-          'mark *location': markLocation,
+          '(place) marker (at) *location': markLocation,
           'move to *location': moveToLocation,
           'remove marker (at) *location': removeMarker,
+          'remove all markers': removeAllMarkers,
           '*term': otherCommands
         };
 
