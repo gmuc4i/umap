@@ -102,6 +102,7 @@
         var geocoder = new google.maps.Geocoder();
 
         function markLocation(address) {
+          window.parent.dialogBox('mark ' + address);
           changeMap(address, function (results, status) {
             map.map.setCenter(results[0].geometry.location);
             var marker = new google.maps.Marker({
@@ -112,6 +113,7 @@
         }
 
         function moveToLocation(address) {
+          window.parent.dialogBox('move to ' + address);
           changeMap(address, function (results) {
             map.map.setCenter(results[0].geometry.location);
           });
@@ -125,9 +127,14 @@
           });
         }
 
+        function otherCommands(term) {
+          window.parent.dialogBox(term);
+        }
+
         var commands = {
           'mark *location': markLocation,
-          'move to *location': moveToLocation
+          'move to *location': moveToLocation,
+          '*term': otherCommands
         };
 
         annyang.addCommands(commands);

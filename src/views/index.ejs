@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/style.css">
   </head>
   <body>
+  <dialog id="myDialog">This is a dialog window</dialog>
     <div class="container">
       <div class="header">
         <h1>OSCMAPI</h1>
@@ -71,5 +72,16 @@
           );
 
       });
+
+      function dialogBox(message) {
+          console.log(message);
+          var dialogBox = document.getElementById('myDialog');
+          dialogBox.textContent = message;
+          dialogBox.show();
+          setTimeout(function () {
+              document.getElementById('myDialog').close();
+          }, 1000);
+      }
+
     </script>
 </html>
