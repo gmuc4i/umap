@@ -141,6 +141,28 @@
           }
         }
 
+        function removeMarkerEstimate(address) {
+          window.parent.dialogBox('remove marker ' + address);
+          var max = 0;
+          var maxKey = '';
+          for (var key in markers) {
+
+            var levenDist = getEditDistance(key, address);
+            var maxString = Math.max(address.length, key.length);
+            var ratio = (maxString - levenDist) / maxString;
+            if (max < ratio) {
+              max = ratio;
+              maxKey = key;
+            }
+          }
+          if (max > .75) {
+            removeMarker(maxKey);
+          }
+          else {
+            window.parent.dialogBox("best match " + max);
+          }
+        }
+
         function changeMap(address, callback) {
           geocoder.geocode({'address': address}, function (results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
@@ -153,11 +175,65 @@
           window.parent.dialogBox(term);
         }
 
+        function zoom(level) {
+          map.map.setZoom(level);
+        }
+
+        function levenshteinDistance(s, t) {
+          if (s.length === 0) return t.length;
+          if (t.length === 0) return s.length;
+
+          s = s.toLowerCase();
+          t = t.toLowerCase();
+
+          return Math.min(
+                  levenshteinDistance(s.substr(1), t) + 1,
+                  levenshteinDistance(t.substr(1), s) + 1,
+                  levenshteinDistance(s.substr(1), t.substr(1)) + (s[0] !== t[0] ? 1 : 0)
+          );
+        }
+
+        // Compute the edit distance between the two given strings
+        function getEditDistance(a, b) {
+          if (a.length === 0) return b.length;
+          if (b.length === 0) return a.length;
+
+          var matrix = [];
+
+          // increment along the first column of each row
+          var i;
+          for (i = 0; i <= b.length; i++) {
+            matrix[i] = [i];
+          }
+
+          // increment each column in the first row
+          var j;
+          for (j = 0; j <= a.length; j++) {
+            matrix[0][j] = j;
+          }
+
+          // Fill in the rest of the matrix
+          for (i = 1; i <= b.length; i++) {
+            for (j = 1; j <= a.length; j++) {
+              if (b.charAt(i - 1) == a.charAt(j - 1)) {
+                matrix[i][j] = matrix[i - 1][j - 1];
+              } else {
+                matrix[i][j] = Math.min(matrix[i - 1][j - 1] + 1, // substitution
+                        Math.min(matrix[i][j - 1] + 1, // insertion
+                                matrix[i - 1][j] + 1)); // deletion
+              }
+            }
+          }
+
+          return matrix[b.length][a.length];
+        };
+
         var commands = {
           '(place) marker (at) *location': markLocation,
           'move to *location': moveToLocation,
-          'remove marker (at) *location': removeMarker,
+          'remove marker (at) *location': removeMarkerEstimate,
           'remove all markers': removeAllMarkers,
+          'zoom number :level': zoom,
           '(show) CIA (data) (about) *stuff': showDataCIA,
           '(show) air force (data) (about) *stuff': showDataAIRFORCE,
           '(show) FBI (data) (about) *stuff': showDataFBI,
