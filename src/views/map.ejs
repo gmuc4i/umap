@@ -158,6 +158,9 @@
           'move to *location': moveToLocation,
           'remove marker (at) *location': removeMarker,
           'remove all markers': removeAllMarkers,
+          '(show) CIA (data) (about) *stuff': showDataCIA,
+          '(show) air force (data) (about) *stuff': showDataAIRFORCE,
+          '(show) FBI (data) (about) *stuff': showDataFBI,
           '*term': otherCommands
         };
 
@@ -165,6 +168,89 @@
 
         annyang.start();
         console.log("annyang started");
+
+        // FBI
+        var FBI_DATA = [
+          ['attack source 1', 39.043005, 125.742541, 1],
+          ['attack source 2', 39.045805, 125.740481, 2],
+          ['attack source 3', 39.045593, 125.740315, 3],
+          ['attack source 4', 39.045934, 125.739821, 4],
+          ['attack source 5', 39.045842, 125.741066, 5]
+        ]
+
+        // NSA DATA
+        var AIRFORCE_DATA = [
+          ['International Sony server 1', 35.631735, 139.749537, 7],
+          ['International Sony server 2', 35.617315, 139.728413, 8],
+          ['International Sony server 3', 35.623279, 139.733165, 9],
+          ['International Sony server 4', 35.630211, 139.789543, 10],
+          ['International Sony server 5', 35.433308, 139.369281, 11],
+          ['International Sony server 6', 35.428339, 139.370340, 12],
+          ['International Sony server 7', 38.287285, 141.015859, 13]
+        ]
+
+        // CIA
+        var CIA_DATA = [
+          ['US Sony servers', 34.017644, -118.401340, 6]
+        ]
+
+        // scenario goes CIA -> NSA -> FBI
+
+        function setMarkers(map, locations) {
+            // Add markers to the map
+
+            // Marker sizes are expressed as a Size of X,Y
+            // where the origin of the image (0,0) is located
+            // in the top left of the image.
+
+            // Origins, anchor positions and coordinates of the marker
+            // increase in the X direction to the right and in
+            // the Y direction down.
+            var image = {
+              url: 'images/red-skull-and-bones.jpg',
+              // This marker is 20 pixels wide by 32 pixels tall.
+              size: new google.maps.Size(121, 122),
+              // The origin for this image is 0,0.
+              origin: new google.maps.Point(0,0),
+              // The anchor for this image is the base of the flagpole at 0,32.
+              anchor: new google.maps.Point(0, 32)
+            };
+            // Shapes define the clickable region of the icon.
+            // The type defines an HTML &lt;area&gt; element 'poly' which
+            // traces out a polygon as a series of X,Y points. The final
+            // coordinate closes the poly by connecting to the first
+            // coordinate.
+            var shape = {
+                coords: [1, 1, 1, 20, 18, 20, 18 , 1],
+                type: 'poly'
+            };
+            for (var i = 0; i < locations.length; i++) {
+              var beach = locations[i];
+              var markerName = beach[0];
+              var myLatLng = new google.maps.LatLng(beach[1], beach[2]);
+              var marker = new google.maps.Marker({
+                  position: myLatLng,
+                  map: map,
+                  icon: image,
+                  shape: shape,
+                  title: markerName,
+                  zIndex: beach[3]
+              });
+              markers[markerName] = marker;
+            }
+          }
+
+          function showDataCIA () {
+            setMarkers(map.map, CIA_DATA);
+          }
+
+          function showDataFBI () {
+            setMarkers(map.map, FBI_DATA);
+          }
+
+          function showDataAIRFORCE () {
+            setMarkers(map.map, AIRFORCE_DATA);
+          }
 
       });
     </script>
