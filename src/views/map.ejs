@@ -272,7 +272,7 @@
 
         // scenario goes CIA -> NSA -> FBI
 
-        function setMarkers(map, locations) {
+        function setMarkers(map, locations, setUrl) {
             // Add markers to the map
 
             // Marker sizes are expressed as a Size of X,Y
@@ -283,9 +283,9 @@
             // increase in the X direction to the right and in
             // the Y direction down.
             var image = {
-              url: 'images/red-skull-and-bones.jpg',
+              url: setUrl || 'images/half-red-skull-and-bones.jpg',
               // This marker is 20 pixels wide by 32 pixels tall.
-              size: new google.maps.Size(121, 122),
+              size: new google.maps.Size(32, 32),
               // The origin for this image is 0,0.
               origin: new google.maps.Point(0,0),
               // The anchor for this image is the base of the flagpole at 0,32.
@@ -312,20 +312,26 @@
                   title: markerName,
                   zIndex: beach[3]
               });
+              map.panTo(marker.position);
               markers[markerName] = marker;
             }
           }
 
           function showDataCIA () {
-            setMarkers(map.map, CIA_DATA);
+            window.parent.dialogBox('showDataCIA');
+            setMarkers(map.map, CIA_DATA, 'images/target-icon.png');
           }
 
-          function showDataFBI () {
+          function showDataFBI (spoken) {
+            window.parent.dialogBox('showDataFBI');
             setMarkers(map.map, FBI_DATA);
+            map.map.setZoom(map.map.getZoom() + 7);
           }
 
-          function showDataAIRFORCE () {
-            setMarkers(map.map, AIRFORCE_DATA);
+          function showDataAIRFORCE (spoken) {
+            window.parent.dialogBox('showDataAIRFORCE');
+            setMarkers(map.map, AIRFORCE_DATA, 'images/target-icon.png');
+            map.map.setZoom(map.map.getZoom() - 3);
           }
 
       });
