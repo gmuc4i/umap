@@ -99,16 +99,20 @@
             map = new uMap('googlev3', 'map-canvas');
           });
         }
+        var markers = {};
         var geocoder = new google.maps.Geocoder();
 
         function markLocation(address) {
           window.parent.dialogBox('mark ' + address);
           changeMap(address, function (results, status) {
             map.map.setCenter(results[0].geometry.location);
+
             var marker = new google.maps.Marker({
               map: map.map,
               position: results[0].geometry.location
             });
+
+            markers[address] = marker;
           });
         }
 
@@ -117,6 +121,15 @@
           changeMap(address, function (results) {
             map.map.setCenter(results[0].geometry.location);
           });
+        }
+
+        function removeMarker(address) {
+          window.parent.dialogBox('remove marker ' + address);
+          var marker = markers[address];
+          if (marker) {
+            marker.setMap(null);
+            delete markers[address];
+          }
         }
 
         function changeMap(address, callback) {
@@ -134,6 +147,7 @@
         var commands = {
           'mark *location': markLocation,
           'move to *location': moveToLocation,
+          'remove marker (at) *location': removeMarker,
           '*term': otherCommands
         };
 
