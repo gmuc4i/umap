@@ -106,13 +106,13 @@
         umap.Eventing.subscribe('marker.post', function (srcName) {
           console.log('received message ' + srcName);
           if (srcName == 'CIA') {
-            showDataCIA(false);
+            showDataCIA(true);
           }
           else if (srcName == 'FBI') {
-            showDataFBI(false);
+            showDataFBI(true);
           }
           else {  // AIRFORCE
-            showDataAIRFORCE(false);
+            showDataAIRFORCE(true);
           }
           // var myLatLng = new google.maps.LatLng(markerArgs['lat'], markerArgs['lon']);
           // var image = {
@@ -273,10 +273,11 @@
           '*term': otherCommands
         };
 
-        annyang.addCommands(commands);
-
-        annyang.start();
-        console.log("annyang started");
+        if(annyang){
+          annyang.addCommands(commands);
+          annyang.start();
+          console.log("annyang started");
+        }
 
         // FBI
         var FBI_DATA = [
